@@ -1,0 +1,91 @@
+<modification>
+    <name>Google Tag Manager</name>
+	<version>1</version>
+	<author>Vitalii Shvets</author>
+	<code>GTM-XXXX</code>
+	
+	<file path="catalog/controller/common/footer.php">
+		<operation>
+			<search><![CDATA[index() {]]></search>
+			<add position="after"><![CDATA[
+				if($this->config->get('google_tag_manager_status')){
+				$data['google_tag_manager_gtm_id'] = $this->config->get('google_tag_manager_gtm_id');
+				} else {
+				$data['google_tag_manager_gtm_id']='';
+				}		
+	]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search><![CDATA[<footer]]></search>
+			<add position="after"><![CDATA[
+				<!-- Google Tag Manager -->
+				<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				)(window,document,'script','dataLayer','<?php echo $google_tag_manager_gtm_id; ?>');</script>
+				<!-- End Google Tag Manager -->		
+	]]></add>
+		</operation>
+	</file>	
+	
+	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[index() {]]></search>
+			<add position="after"><![CDATA[
+				if($this->config->get('google_tag_manager_status')){
+				$data['google_tag_manager_gtm_id'] = $this->config->get('google_tag_manager_gtm_id');
+				} else {
+				$data['google_tag_manager_gtm_id']='';
+				}		
+	]]></add>
+		</operation>
+	</file>	
+	
+	<file path="catalog/view/theme/*/template/common/header.tpl">
+		<operation>
+			<search><![CDATA[<body]]></search>
+			<add position="after"><![CDATA[
+				<script>
+					dataLayer = [];
+				</script>
+				<!-- Google Tag Manager (noscript) -->
+				<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $google_tag_manager_gtm_id; ?>"
+				height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+				<!-- End Google Tag Manager (noscript) -->
+	]]></add>
+		</operation>
+	</file>	
+	
+	<file path="catalog/controller/product/product.php">
+		<operation>
+			<search><![CDATA[$data['model'] = $product_info['model'];]]></search>
+			<add position="after"><![CDATA[
+				$data['sku'] = trim($product_info['sku']);
+		]]></add>
+		</operation>
+	</file>	
+	
+		<file path="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search><![CDATA[<?php echo $header;]]></search>
+			<add position="after"><![CDATA[
+				<script>
+					dataLayer = [{
+					'product_id': <?php echo $product_id; ?>,
+					'product_price': <?php echo $price; ?>,
+					'product_name': <?php echo htmlspecialchars_decode($heading_title); ?>,
+					<?php if($sku!=''){ ?>
+					'product_sku': <?php echo $sku; ?>
+					<?php } ?>
+					}];
+				</script>
+	
+	]]></add>
+		</operation>
+	</file>
+	
+</modification>
